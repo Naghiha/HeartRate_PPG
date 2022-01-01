@@ -42,12 +42,15 @@ namespace HeartRate_PPG.Services
                 // TODO: Set the update interval in milliseconds
                 // _sensor.Interval = 1000;
             }
-            catch (NotSupportedException)
+            catch (NotSupportedException e)
             {
+                Logger.Error("HeartRate Error1: " + e.Message);
+
                 // TODO: The device does not support the sensor, handle exception as appropriate to your scenario
             }
-            catch (UnauthorizedAccessException)
+            catch (UnauthorizedAccessException e)
             {
+                Logger.Error("HeartRate Error2: " + e.Message);
                 // TODO: The user does not grant your app access to sensors, handle exception as appropriate to your scenario
             }
         }
@@ -95,12 +98,25 @@ namespace HeartRate_PPG.Services
 
                 return 0;
             }
-            var newCase = new TestCase();
-            newCase.RegisterDate = DateTime.Now;
-            _sQLite.Insert(newCase);
-            _testCase = newCase.TestCaseId;
-            
-             _sensor.Start();
+            try
+            {
+                var newCase = new TestCase();
+                newCase.RegisterDate = DateTime.Now;
+                _sQLite.Insert(newCase);
+                _testCase = newCase.TestCaseId;
+
+                if (_sensor != null)
+                {
+                    _sensor.Start();
+                }
+              
+            }
+            catch (Exception e)
+            {
+
+                Logger.Error("HeartRate Error3: " + e.Message);
+
+            }
             return _testCase;
         }
 
@@ -113,7 +129,18 @@ namespace HeartRate_PPG.Services
         public void Stop()
         {
             _testCase = 0;
-            _sensor.Stop();
+            try
+            {
+                if (_sensor != null)
+                {
+                    _sensor.Stop();
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error("HeartRate Error6: " + e.Message);
+
+            }
         }
 
         /// <summary>
@@ -121,8 +148,17 @@ namespace HeartRate_PPG.Services
         /// </summary>
         public void Dispose()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            try
+            {
+                Dispose(true);
+                GC.SuppressFinalize(this);
+            }
+            catch (Exception e)
+            {
+
+                Logger.Error("HeartRate Error7: " + e.Message);
+
+            }
         }
 
         /// <summary>
@@ -134,7 +170,8 @@ namespace HeartRate_PPG.Services
             {
                 try
                 {
-                    if (disposing)
+                    
+                    if (disposing && _sensor != null)
                     {
                         _sensor.DataUpdated -= sensor_DataUpdated;
                         _sensor.Dispose();
@@ -143,10 +180,9 @@ namespace HeartRate_PPG.Services
                     _sensor = null;
                     _disposed = true;
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-
-                    
+                    Logger.Error("HeartRate Error5: " + e.Message);
                 }
             }
         }

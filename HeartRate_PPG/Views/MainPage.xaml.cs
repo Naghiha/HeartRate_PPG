@@ -22,25 +22,34 @@ namespace HeartRate_PPG.Views
         private HeartRateMonitorService _heartRate;
         private void Button_Clicked(object sender, EventArgs e)
         {
-            Button button = sender as Button;
-            if (button.Text == "Start")
+            try
             {
-                button.Text = "Stop";
-                _heartRate = new HeartRateMonitorService();
-                CaseNumber = _heartRate.Start().ToString();
-                CaseTest.Text ="TestCase Number: " +CaseNumber;
-                CaseTest.IsVisible = true;
-            }
-            else
-            {
-                button.Text = "Start";
-                _heartRate.Stop();
-                CaseTest.IsVisible = false;
-
-                if (_heartRate != null)
+                Button button = sender as Button;
+                if (button.Text == "Start")
                 {
-                    _heartRate.Dispose();
+                    button.Text = "Stop";
+                    _heartRate = new HeartRateMonitorService();
+                    CaseNumber = _heartRate.Start().ToString();
+                    CaseTest.Text = "TestCase Number: " + CaseNumber;
+                    CaseTest.IsVisible = true;
                 }
+                else
+                {
+                    button.Text = "Start";
+                    _heartRate.Stop();
+                    CaseTest.IsVisible = false;
+
+                    if (_heartRate != null)
+                    {
+                        _heartRate.Dispose();
+                    }
+                }
+            }
+            catch (Exception exp)
+            {
+                Logger.Error("HeartRate Error9: " + exp.Message);
+
+
             }
         }
     }
