@@ -11,6 +11,7 @@
                 VerticalOptions="CenterAndExpand" 
                 HorizontalOptions="CenterAndExpand" />
             <Label Text="--"
+                   FontSize="Micro"
                    x:Name="CaseTest"
                    VerticalOptions="CenterAndExpand" 
                 HorizontalOptions="CenterAndExpand"

@@ -37,8 +37,8 @@ namespace HeartRate_PPG.Views
                 {
                     button.Text = "Start";
                     _heartRate.Stop();
-                    CaseTest.IsVisible = false;
-
+                    //CaseTest.IsVisible = false;
+                    CaseTest.Text = _heartRate.message;
                     if (_heartRate != null)
                     {
                         _heartRate.Dispose();
